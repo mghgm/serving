@@ -340,8 +340,13 @@ func (m *MultiScaler) tickScaler(scaler UniScaler, runner *scalerRunner, metricK
 	}
 
 	if runner.updateLatestScale(sr) {
-        runner.logger.Info(fmt.Sprintf("{\"logger\": \"mghgm: tickScaler(Updated)\", \"timestamp\":\"%d\", \"EBC\":\"%d\", \"name\": \"%s\", \"namespace\": \"%s\", \"DesiredPodCount\": \"%d\"}",
-            time.Now().UnixMicro(), sr.ExcessBurstCapacity, metricKey.Name, metricKey.Namespace, sr.DesiredPodCount))
+        runner.logger.Infow("mghgm = tickScaler(Updated)",
+            "epoch", time.Now().UnixMicro(),
+            "name", metricKey.Name,
+            "namespace", metricKey.Namespace,
+            "ebc", sr.ExcessBurstCapacity,
+            "desiredPodCount", sr.DesiredPodCount,
+        )
 		m.Inform(metricKey)
 	}
 }
