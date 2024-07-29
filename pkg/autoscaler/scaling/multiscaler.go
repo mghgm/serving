@@ -21,7 +21,6 @@ import (
 	"math"
 	"sync"
 	"time"
-    "fmt"
 
 	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/api/errors"
