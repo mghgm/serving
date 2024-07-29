@@ -21,6 +21,7 @@ import (
 	"math"
 	"sync"
 	"time"
+    "fmt"
 
 	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -339,6 +340,8 @@ func (m *MultiScaler) tickScaler(scaler UniScaler, runner *scalerRunner, metricK
 	}
 
 	if runner.updateLatestScale(sr) {
+        runner.logger.Info(fmt.Sprintf("{\"logger\": \"mghgm: tickScaler(Updated)\", \"timestamp\":\"%d\", \"EBC\":\"%d\", \"name\": \"%s\", \"namespace\": \"%s\", \"DesiredPodCount\": \"%d\"}",
+            time.Now().UnixMicro(), sr.ExcessBurstCapacity, metricKey.Name, metricKey.Namespace, sr.DesiredPodCount))
 		m.Inform(metricKey)
 	}
 }

@@ -413,6 +413,8 @@ func (c *Impl) EnqueueNamespaceOf(obj interface{}) {
 // EnqueueKey takes a namespace/name string and puts it onto the work queue.
 func (c *Impl) EnqueueKey(key types.NamespacedName) {
 	c.workQueue.Add(key)
+    c.logger.Info(fmt.Sprintf("{\"label\": \"mghgm: EnqueueKey\", \"timestamp\":\"%d\", \"name\": \"%s\", \"namespace\": \"%s\"}",
+        time.Now().UnixMicro(), key.Name, key.Namespace))
 
 	if logger := c.logger.Desugar(); logger.Core().Enabled(zapcore.DebugLevel) {
 		logger.Debug(fmt.Sprintf("Adding to queue %s (depth: %d)", safeKey(key), c.workQueue.Len()),
@@ -506,7 +508,11 @@ func (c *Impl) processNextWorkItem() bool {
 		return false
 	}
 	key := obj.(types.NamespacedName)
-	keyStr := safeKey(key)
+    
+    c.logger.Info(fmt.Sprintf("{\"label\": \"mghgm: processNextWorkItem\", \"timestamp\":\"%d\", \"name\": \"%s\", \"namespace\": \"%s\"}",
+        time.Now().UnixMicro(), key.Name, key.Namespace))
+	
+    keyStr := safeKey(key)
 
 	c.logger.Debugf("Processing from queue %s (depth: %d)", safeKey(key), c.workQueue.Len())
 

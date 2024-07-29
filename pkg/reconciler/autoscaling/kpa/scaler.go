@@ -320,6 +320,9 @@ func (ks *scaler) applyScale(ctx context.Context, pa *autoscalingv1alpha1.PodAut
 	if err != nil {
 		return fmt.Errorf("failed to apply scale %d to scale target %s: %w", desiredScale, name, err)
 	}
+    
+    logger.Info(fmt.Sprintf("{\"label\": \"mghgm: patched newScale\", \"timestamp\":\"%d\", \"name\": \"%s\", \"namespace\": \"%s\", \"desiredScale\": \"%d\"}",
+        time.Now().UnixMicro(), pa.Name, pa.Namespace, desiredScale))
 
 	logger.Debug("Successfully scaled to ", desiredScale)
 	return nil
@@ -372,5 +375,9 @@ func (ks *scaler) scale(ctx context.Context, pa *autoscalingv1alpha1.PodAutoscal
 	}
 
 	logger.Infof("Scaling from %d to %d", currentScale, desiredScale)
+
+    logger.Info(fmt.Sprintf("{\"label\": \"mghgm: ks.scale()\", \"timestamp\":\"%d\", \"name\": \"%s\", \"namespace\": \"%s\", \"desiredScale\": \"%d\"}",
+        time.Now().UnixMicro(), pa.Name, pa.Namespace, desiredScale))
+
 	return desiredScale, ks.applyScale(ctx, pa, desiredScale, ps)
 }
